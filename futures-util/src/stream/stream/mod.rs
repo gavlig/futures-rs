@@ -13,7 +13,7 @@ use core::pin::Pin;
 #[cfg(feature = "sink")]
 use futures_core::stream::TryStream;
 #[cfg(feature = "alloc")]
-use futures_core::stream::{BoxStream, LocalBoxStream};
+use futures_core::stream::{BoxStream, LocalBoxStream, SyncBoxStream};
 use futures_core::{
     future::Future,
     stream::{FusedStream, Stream},
@@ -1343,6 +1343,20 @@ pub trait StreamExt: Stream {
     fn boxed_local<'a>(self) -> LocalBoxStream<'a, Self::Item>
     where
         Self: Sized + 'a,
+    {
+        assert_stream::<Self::Item, _>(Box::pin(self))
+    }
+
+    /// Wrap the stream in a Box, pinning it.
+    ///
+    /// Similar to `boxed`, but also with the `Sync` requirement.
+    ///
+    /// This method is only available when the `std` or `alloc` feature of this
+    /// library is activated, and it is activated by default.
+    #[cfg(feature = "alloc")]
+    fn boxed_sync<'a>(self) -> SyncBoxStream<'a, Self::Item>
+    where
+        Self: Sized + Sync + Send + 'a,
     {
         assert_stream::<Self::Item, _>(Box::pin(self))
     }

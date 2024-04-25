@@ -16,6 +16,10 @@ pub type BoxFuture<'a, T> = Pin<alloc::boxed::Box<dyn Future<Output = T> + Send 
 #[cfg(feature = "alloc")]
 pub type LocalBoxFuture<'a, T> = Pin<alloc::boxed::Box<dyn Future<Output = T> + 'a>>;
 
+/// `BoxFuture`, but also with `Sync` requirement.
+#[cfg(feature = "alloc")]
+pub type SyncBoxFuture<'a, T> = Pin<alloc::boxed::Box<dyn Future<Output = T> + Sync + Send + 'a>>;
+
 /// A future which tracks whether or not the underlying future
 /// should no longer be polled.
 ///

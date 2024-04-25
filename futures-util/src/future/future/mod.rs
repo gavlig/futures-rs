@@ -12,7 +12,7 @@ use crate::future::{assert_future, Either};
 use crate::never::Never;
 use crate::stream::assert_stream;
 #[cfg(feature = "alloc")]
-use futures_core::future::{BoxFuture, LocalBoxFuture};
+use futures_core::future::{BoxFuture, LocalBoxFuture, SyncBoxFuture};
 use futures_core::{
     future::Future,
     stream::Stream,
@@ -532,6 +532,20 @@ pub trait FutureExt: Future {
     fn boxed_local<'a>(self) -> LocalBoxFuture<'a, Self::Output>
     where
         Self: Sized + 'a,
+    {
+        assert_future::<Self::Output, _>(Box::pin(self))
+    }
+
+    /// Wrap the future in a Box, pinning it.
+    ///
+    /// Similar to `boxed`, but also with `Sync` requirements.
+    ///
+    /// This method is only available when the `std` or `alloc` feature of this
+    /// library is activated, and it is activated by default.
+    #[cfg(feature = "alloc")]
+    fn boxed_sync<'a>(self) -> SyncBoxFuture<'a, Self::Output>
+    where
+        Self: Sized + Sync + Send + 'a,
     {
         assert_future::<Self::Output, _>(Box::pin(self))
     }

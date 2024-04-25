@@ -13,6 +13,10 @@ pub type BoxStream<'a, T> = Pin<alloc::boxed::Box<dyn Stream<Item = T> + Send + 
 #[cfg(feature = "alloc")]
 pub type LocalBoxStream<'a, T> = Pin<alloc::boxed::Box<dyn Stream<Item = T> + 'a>>;
 
+/// `BoxStream`, but also with `Sync` requirement.
+#[cfg(feature = "alloc")]
+pub type SyncBoxStream<'a, T> = Pin<alloc::boxed::Box<dyn Stream<Item = T> + Sync + Send + 'a>>;
+
 /// A stream of values produced asynchronously.
 ///
 /// If `Future<Output = T>` is an asynchronous version of `T`, then `Stream<Item
