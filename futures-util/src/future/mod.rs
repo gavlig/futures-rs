@@ -13,7 +13,7 @@
 pub use core::future::Future;
 
 #[cfg(feature = "alloc")]
-pub use futures_core::future::{BoxFuture, LocalBoxFuture};
+pub use futures_core::future::{BoxFuture, LocalBoxFuture, SyncBoxFuture};
 pub use futures_core::future::{FusedFuture, TryFuture};
 pub use futures_task::{FutureObj, LocalFutureObj, UnsafeFutureObj};
 
